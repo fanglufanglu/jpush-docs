@@ -243,6 +243,50 @@
 ##SDK请求授权一键登录（新）
 
 ### 支持的版本
+开始支持的版本 2.4.0
+
+### 接口的定义
++ ***JVerificationInterface.loginAuth(final Context context, boolean autoFinish, final VerifyListener listener, final AuthPageEventListener authPageEventListener)***
+	+ 接口说明：
+		+ 调起一键登录授权页面，在用户授权后获取loginToken，同时支持授权页事件监听
+	+ 参数说明：
+		+ context：android的上下文
+		+ boolean：是否自动关闭授权页，true - 是，false - 否
+		+ listener：登录授权结果回调
+		+ authPageEventListener：授权页事件回调
+    + 回调说明：
+	    + VerifyListener  
+       ***onResult(int code, String  content, String operator)***
+		    + code: 返回码，6000代表loginToken获取成功，6001代表loginToken获取失败，其他返回码详见描述
+		    + content：返回码的解释信息，若获取成功，内容信息代表loginToken。
+		    + operator：成功时为对应运营商，CM代表中国移动，CU代表中国联通，CT代表中国电信。失败时可能为null  
+	    + AuthPageEventListener  
+	    ***onEvent(int code, String  content)***
+		    + cmd: 返回码，1代表授权页关闭事件。
+		    + content：内容描述。
+	+ 调用示例：
+
+~~~
+	JVerificationInterface.loginAuth(this, false, new VerifyListener() {
+         @Override
+              public void onResult(int code, String content, String operator) {
+                 if (code == 6000){
+                    Log.d(TAG, "code=" + code + ", token=" + content+" ,operator="+operator);
+                }else{
+                    Log.d(TAG, "code=" + code + ", message=" + content);
+                }
+              }
+          },new AuthPageEventListener() {
+              @Override
+              public void onEvent(int cmd, String msg) {
+                  Log.d(TAG, "[onEvent]. [" + cmd + "]message=" + msg);
+              }
+          });
+~~~
+
+##SDK请求授权一键登录（旧）
+
+### 支持的版本
 开始支持的版本 2.3.0
 
 ### 接口的定义
@@ -430,15 +474,14 @@
 + ***addNavControlView(View view, JVerifyUIClickCallback callback)***
 
 	+ 接口说明：
-	   + 在授权页中顶部导航栏添加自定义控件
+		+ 在授权页中顶部导航栏添加自定义控件
 	+ 参数说明：
-       + view：开发者传入自定义的控件，开发者需要提前设置好控件的布局属性，SDK只支持RelativeLayout布局
-       + callback： 自定义控件的点击回调
-   + 回调说明：
-      + ***onClicked(Context context, View view)***
-         + context：android的上下文
-         + view：自定义的控件的对象
-
+		+ view：开发者传入自定义的控件，开发者需要提前设置好控件的布局属性，SDK只支持RelativeLayout布局
+		+ callback： 自定义控件的点击回调
+	+ 回调说明：
+		+ ***onClicked(Context context, View view)***
+			+ context：android的上下文
+			+ view：自定义的控件的对象
 	+ 调用示例：
 
 ~~~
@@ -470,6 +513,10 @@
 	|:-----:|:----:|:----:|
 	|setAuthBGImgPath|String|设置背景图片|
 
++ 状态栏
+	|方法|参数类型|说明|
+	|:-----:|:----:|:----:|
+	|setStatusBarColorWithNav|boolean|设置状态栏与导航栏同色。仅在android 5.0以上设备生效。 since 2.4.1|
 
 
 + 授权页导航栏
@@ -481,6 +528,10 @@
 	|setNavTextColor|int|设置导航栏标题文字颜色|
 	|setNavReturnImgPath|String|设置导航栏返回按钮图标|
 	|setNavTransparent|boolean|设置导航栏背景是否透明。默认不透明。since 2.3.2|
+	|setNavTextSize|int|设置导航栏标题文字字体大小（单位：sp）。since 2.4.1|
+	|setNavReturnBtnHidden|boolean|设置导航栏返回按钮是否隐藏。默认不隐藏。since 2.4.1|
+
+
 
 + 授权页logo
 
@@ -527,8 +578,10 @@
    |setUncheckedImgPath|String|设置复选框未选中时图片|
    |setPrivacyState|boolean|设置隐私条款默认选中状态，默认不选中。since 2.3.2|
    |setPrivacyOffsetX|int|设置隐私条款相对于屏幕左边x轴偏移。since 2.3.8|
-   |setPrivacyTextCenterGravity|int|设置隐私条款文字是否居中对齐（默认左对齐）。since 2.3.8|
+   |setPrivacyTextCenterGravity|boolean|设置隐私条款文字是否居中对齐（默认左对齐）。since 2.3.8|
    |setPrivacyText|String,String,String,String|设置隐私条款名称外的文字。<br>如：登录即同意...和...、...并使用本机号码登录<br>参数1为："登录即同意"。<br>参数2为："和"。<br>参数3为："、"。<br>参数4为："并使用本机号码登录"。<br>since 2.3.8|
+   |setPrivacyTextSize|int|设置隐私条款文字字体大小（单位：sp）。since 2.4.1|
+
 
 + 授权页slogan
 
